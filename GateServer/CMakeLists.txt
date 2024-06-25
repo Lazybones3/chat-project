@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(GateServer)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # Boost
@@ -20,7 +20,25 @@ include_directories(${HIREDIS_INCLUDE_DIRS})
 find_package(mysql-concpp REQUIRED)
 include_directories(${CONCPP_INCLUDE_DIR})
 
-set(PROJECT_SRC GateServer.cpp const.h Singleton.h)
+set(PROJECT_SRC GateServer.cpp
+        const.h
+        Singleton.h
+        AsioIOServicePool.h
+        AsioIOServicePool.cpp
+        ConfigMgr.h
+        ConfigMgr.cpp
+        CServer.cpp
+        CServer.h
+        HttpConnection.cpp
+        HttpConnection.h
+        LogicSystem.cpp
+        LogicSystem.h
+        RedisMgr.cpp
+        RedisMgr.h
+        MysqlMgr.cpp
+        MysqlMgr.h
+        MysqlDao.cpp
+        MysqlDao.h)
 
 add_executable(GateServer ${PROJECT_SRC})
 

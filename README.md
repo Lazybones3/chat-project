@@ -4,11 +4,8 @@
 
 他的代码：https://gitee.com/secondtonone1/llfcchat
 
-Ubuntu中安装第三方依赖：
+Ubuntu22.04中安装第三方依赖：
 
 ```shell
-sudo apt install pkg-config
-sudo apt install libjsoncpp-dev
-sudo apt install libhiredis-dev
-sudo apt install libmysqlcppconn-dev
+sudo apt install pkg-config libboost-all-dev libjsoncpp-dev libhiredis-dev libmysqlcppconn-dev
 ```

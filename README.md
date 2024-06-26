@@ -7,5 +7,5 @@
 Ubuntu22.04中安装第三方依赖：
 
 ```shell
-sudo apt install pkg-config libboost-all-dev libjsoncpp-dev libhiredis-dev libmysqlcppconn-dev
+sudo apt install pkg-config libboost-all-dev libjsoncpp-dev
 ```

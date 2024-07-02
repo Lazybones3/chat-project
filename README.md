@@ -4,8 +4,9 @@
 
 他的代码：https://gitee.com/secondtonone1/llfcchat
 
-Ubuntu22.04中安装第三方依赖：
+grpc命令：
 
 ```shell
-sudo apt install pkg-config libboost-all-dev libjsoncpp-dev
+protoc -I . --grpc_out=. --plugin=protoc-gen-grpc=$MY_INSTALL_DIR/grpc/bin/grpc_cpp_plugin message.proto
+protoc -I . --cpp_out=. message.proto
 ```

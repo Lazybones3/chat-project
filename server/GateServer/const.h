@@ -1,12 +1,12 @@
 #pragma once
 
 #include <assert.h>
-#include <cppconn/exception.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <mysql_connection.h>
-#include <mysql_driver.h>
+#include <jdbc/cppconn/exception.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
+#include <jdbc/cppconn/statement.h>
+#include <jdbc/mysql_connection.h>
+#include <jdbc/mysql_driver.h>
 #include <json/json.h>
 #include <json/reader.h>
 #include <json/value.h>

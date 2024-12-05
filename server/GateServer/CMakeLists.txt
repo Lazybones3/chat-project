@@ -3,33 +3,37 @@ project(GateServer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-list(APPEND CMAKE_PREFIX_PATH $ENV{MY_INSTALL_DIR} $ENV{MY_INSTALL_DIR}/grpc)
+list(APPEND CMAKE_PREFIX_PATH $ENV{MY_INSTALL_DIR})
 if (NOT CMAKE_PREFIX_PATH)
     message(FATAL_ERROR "Please set CMAKE_PREFIX_PATH")
 endif ()
 
 # Boost
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system CONFIG)
+
+find_package(PkgConfig REQUIRED)
 
 # MySQL
 find_package(mysql-concpp CONFIG REQUIRED)
 include_directories(${MYSQL_CONCPP_INCLUDE_DIR})
-message(STATUS "Using MySQL Connector ${mysql-concpp_VERSION}")
+message(STATUS "Using MySQL Client ${MYSQLCLIENT_VERSION}")
 
 # JsonCpp
-find_package(jsoncpp CONFIG REQUIRED)
-message(STATUS "Using JsonCpp ${jsoncpp_VERSION}")
-get_target_property(JSON_INC_PATH jsoncpp_object INTERFACE_INCLUDE_DIRECTORIES)
-include_directories(${JSON_INC_PATH})
+#find_package(jsoncpp CONFIG REQUIRED)
+#get_target_property(JSON_INC_PATH jsoncpp_object INTERFACE_INCLUDE_DIRECTORIES)
+#include_directories(${JSON_INC_PATH})
+pkg_check_modules(JSONCPP REQUIRED jsoncpp)
+message(STATUS "Using JsonCpp ${JSONCPP_VERSION}")
 
 # Redis
-find_package(hiredis CONFIG REQUIRED)
-include_directories(${hiredis_INCLUDE_DIRS})
-message(STATUS "Using hiredis ${hiredis_VERSION}")
+#find_package(hiredis CONFIG REQUIRED)
+#include_directories(${hiredis_INCLUDE_DIRS})
+pkg_check_modules(HIREDIS REQUIRED hiredis)
+message(STATUS "Using hiredis ${HIREDIS_VERSION}")
 
 # Protobuf
-find_package(Protobuf CONFIG REQUIRED)
-message(STATUS "Using protobuf ${Protobuf_VERSION}")
+find_package(protobuf CONFIG REQUIRED)
+message(STATUS "Using protobuf ${protobuf_VERSION}")
 # gRPC
 find_package(gRPC CONFIG REQUIRED)
 message(STATUS "Using gRPC ${gRPC_VERSION}")
@@ -60,4 +64,4 @@ set(PROJECT_SRC GateServer.cpp
 
 add_executable(GateServer ${PROJECT_SRC})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${hiredis_LIBRARIES} mysql::concpp protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++ jsoncpp_object)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${MYSQLCLIENT_LIBRARIES} ${JSONCPP_LIBRARIES} ${HIREDIS_LIBRARIES} protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++ jsoncpp_object)

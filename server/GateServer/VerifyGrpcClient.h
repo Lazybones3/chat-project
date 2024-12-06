@@ -39,9 +39,12 @@ public:
     std::unique_ptr<VarifyService::Stub> getConnection() {
         std::unique_lock<std::mutex> lock(mutex_);
         cond_.wait(lock, [this] {
+            // 这里返回true不阻塞继续执行，返回false阻塞等待
+            // 如果已经停止就继续执行
             if (b_stop_) {
                 return true;
             }
+            // 如果连接池为空就阻塞等待
             return !connections_.empty();
         });
         //如果停止则直接返回空指针
@@ -59,11 +62,13 @@ public:
             return;
         }
         connections_.push(std::move(context));
+        // 唤醒一个等待中的线程
         cond_.notify_one();
     }
 
     void Close() {
-        b_stop_ = true;
+        b_stop_.store(true);
+        // 唤醒所有等待中的线程
         cond_.notify_all();
     }
 
@@ -84,6 +89,8 @@ public:
     ~VerifyGrpcClient() {
 
     }
+
+    // 通过池子获取连接，用完之后再返回连接给池子
     GetVarifyRsp GetVarifyCode(std::string email) {
         ClientContext context;
         GetVarifyRsp reply;

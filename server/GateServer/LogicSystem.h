@@ -25,7 +25,7 @@ public:
 
 private:
     LogicSystem();
-
+    // _post_handlers和_get_handlers分别是post和get请求的回调函数map，key为路由，value为回调函数。
     std::map<std::string, HttpHandler> _post_handlers;
     std::map<std::string, HttpHandler> _get_handlers;
 };

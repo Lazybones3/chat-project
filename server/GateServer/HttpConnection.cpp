@@ -53,7 +53,7 @@ std::string UrlEncode(const std::string &str) {
         else if (str[i] == ' ') //为空字符
             strTemp += "+";
         else {
-            //其他字符需要提前加%并且高四位和低四位分别转为16进制
+            //其他字符需要提前加%并且高四位和低四位分别转为16进制，转换规则见ASCII码表
             strTemp += '%';
             strTemp += ToHex((unsigned char) str[i] >> 4);
             strTemp += ToHex((unsigned char) str[i] & 0x0F);
@@ -85,11 +85,11 @@ void HttpConnection::PreParseGetParam() {
     // 查找查询字符串的开始位置（即 '?' 的位置）
     auto query_pos = uri.find('?');
     if (query_pos == std::string::npos) {
-        _get_url = uri.to_string();
+        _get_url = uri;
         return;
     }
-    _get_url = uri.substr(0, query_pos).to_string();
-    std::string query_string = uri.substr(query_pos + 1).to_string();
+    _get_url = uri.substr(0, query_pos);
+    std::string query_string = uri.substr(query_pos + 1);
     std::string key;
     std::string value;
     std::size_t pos = 0;
@@ -121,6 +121,7 @@ void HttpConnection::HandleReq() {
     _response.keep_alive(false);
     if (_request.method() == http::verb::get) {
         PreParseGetParam();
+        // 调用LogicSystem的HandleGet接口处理请求
         bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
         if (!success) {
             _response.result(http::status::not_found);
@@ -136,7 +137,7 @@ void HttpConnection::HandleReq() {
     }
 
     if (_request.method() == http::verb::post) {
-        bool success = LogicSystem::GetInstance()->HandlePost(_request.target().to_string(), shared_from_this());
+        bool success = LogicSystem::GetInstance()->HandlePost(_request.target(), shared_from_this());
         if (!success) {
             _response.result(http::status::not_found);
             _response.set(http::field::content_type, "text/plain");
@@ -152,6 +153,7 @@ void HttpConnection::HandleReq() {
     }
 }
 
+// 检测超时
 void HttpConnection::CheckDeadline() {
     auto self = shared_from_this();
     deadline_.async_wait([self](beast::error_code ec) {
@@ -166,6 +168,7 @@ void HttpConnection::WriteResponse() {
     auto self = shared_from_this();
     _response.content_length(_response.body().size());
     http::async_write(_socket, _response, [self](beast::error_code ec, std::size_t) {
+        // http是短链接，所以发送完数据后不需要再监听对方链接，直接断开发送端即可
         self->_socket.shutdown(tcp::socket::shutdown_send, ec);
         self->deadline_.cancel();
     });

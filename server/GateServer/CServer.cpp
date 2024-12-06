@@ -2,8 +2,9 @@
 #include "AsioIOServicePool.h"
 #include "HttpConnection.h"
 
-CServer::CServer(boost::asio::io_context &ioc, unsigned short &port) : _ioc(ioc),
-                                                                       _acceptor(ioc, tcp::endpoint(tcp::v4(), port)) {
+CServer::CServer(boost::asio::io_context &ioc, unsigned short &port)
+: _ioc(ioc),
+_acceptor(ioc, tcp::endpoint(tcp::v4(), port)) {
 
 }
 
@@ -18,7 +19,6 @@ void CServer::Start() {
                 self->Start();
                 return;
             }
-
             //处理新链接，创建HttpConnection类管理新连接
             new_con->Start();
             //继续监听

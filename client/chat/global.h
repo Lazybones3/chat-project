@@ -39,4 +39,6 @@ enum Modules {
     LOGINMOD = 2,
 };
 
+extern QString gate_url_prefix;
+
 #endif // GLOBAL_H

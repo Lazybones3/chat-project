@@ -72,6 +72,7 @@ public:
         this->_config_map = src._config_map;
     }
 
+    // 为了方便读取配置文件，将ConfigMgr改为单例, 将构造函数变成私有
     static ConfigMgr &Inst() {
         static ConfigMgr cfg_mgr;
         return cfg_mgr;

@@ -2,8 +2,11 @@
 #include "HttpConnection.h"
 #include "MysqlMgr.h"
 #include "RedisMgr.h"
+#include "VerifyGrpcClient.h"
+#include "StatusGrpcClient.h"
 
 LogicSystem::LogicSystem() {
+    // 在构造函数中实现具体的消息注册
     RegGet("/get_test", [](std::shared_ptr<HttpConnection> connection) {
         beast::ostream(connection->_response.body()) << "receive get_test req " << std::endl;
         int i = 0;

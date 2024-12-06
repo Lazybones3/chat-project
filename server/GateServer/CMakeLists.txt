@@ -9,14 +9,14 @@ if (NOT CMAKE_PREFIX_PATH)
 endif ()
 
 # Boost
-find_package(Boost REQUIRED COMPONENTS system CONFIG)
-
-find_package(PkgConfig REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem CONFIG)
 
 # MySQL
 find_package(mysql-concpp CONFIG REQUIRED)
 include_directories(${MYSQL_CONCPP_INCLUDE_DIR})
-message(STATUS "Using MySQL Client ${MYSQLCLIENT_VERSION}")
+message(STATUS "Using mysql-concpp ${MYSQL_CONCPP_VERSION}")
+
+find_package(PkgConfig REQUIRED)
 
 # JsonCpp
 #find_package(jsoncpp CONFIG REQUIRED)
@@ -39,29 +39,33 @@ find_package(gRPC CONFIG REQUIRED)
 message(STATUS "Using gRPC ${gRPC_VERSION}")
 
 set(PROJECT_SRC GateServer.cpp
-        const.h
-        Singleton.h
-        AsioIOServicePool.h
-        AsioIOServicePool.cpp
-        ConfigMgr.h
-        ConfigMgr.cpp
-        CServer.cpp
-        CServer.h
-        HttpConnection.cpp
-        HttpConnection.h
-        LogicSystem.cpp
-        LogicSystem.h
-        RedisMgr.cpp
-        RedisMgr.h
-        MysqlMgr.cpp
-        MysqlMgr.h
-        MysqlDao.cpp
-        MysqlDao.h
-        message.grpc.pb.cc
-        message.grpc.pb.h
-        message.pb.cc
-        message.pb.h)
+    const.h
+    Singleton.h
+    AsioIOServicePool.h
+    AsioIOServicePool.cpp
+    ConfigMgr.h
+    ConfigMgr.cpp
+    CServer.cpp
+    CServer.h
+    HttpConnection.cpp
+    HttpConnection.h
+    LogicSystem.cpp
+    LogicSystem.h
+    RedisMgr.cpp
+    RedisMgr.h
+    MysqlMgr.cpp
+    MysqlMgr.h
+    MysqlDao.cpp
+    MysqlDao.h
+    message.grpc.pb.cc
+    message.grpc.pb.h
+    message.pb.cc
+    message.pb.h
+    VerifyGrpcClient.cpp
+    VerifyGrpcClient.h
+    StatusGrpcClient.cpp
+    StatusGrpcClient.h)
 
 add_executable(GateServer ${PROJECT_SRC})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${MYSQLCLIENT_LIBRARIES} ${JSONCPP_LIBRARIES} ${HIREDIS_LIBRARIES} protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++ jsoncpp_object)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${JSONCPP_LIBRARIES} ${HIREDIS_LIBRARIES} mysql::concpp mysql::concpp-jdbc protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++ absl::log)

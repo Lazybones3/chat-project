@@ -49,7 +49,7 @@ void RegisterDialog::on_get_code_clicked()
     if (match) {
         QJsonObject json_obj;
         json_obj["email"] = email;
-        HttpMgr::GetInstance()->PostHttpReq(QUrl("/get_varifycode"), json_obj, ReqId::ID_GET_VARIFY_CODE, Modules::RESETMOD);
+        HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/get_varifycode"), json_obj, ReqId::ID_GET_VARIFY_CODE, Modules::RESETMOD);
     } else {
         showTip(tr("邮箱地址不对"), false);
     }

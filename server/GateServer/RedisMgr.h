@@ -1,7 +1,7 @@
 #pragma once
 
 #include "const.h"
-#include "hiredis.h"
+#include <hiredis/hiredis.h>
 #include <queue>
 #include <atomic>
 #include <mutex>

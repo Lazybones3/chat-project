@@ -68,4 +68,7 @@ set(PROJECT_SRC GateServer.cpp
 
 add_executable(GateServer ${PROJECT_SRC})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${JSONCPP_LIBRARIES} ${HIREDIS_LIBRARIES} mysql::concpp mysql::concpp-jdbc protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++ absl::log)
+# 解决报错：absl::lts_20240722::log_internal::LogMessage::operator<<(unsigned long)
+target_compile_options(GateServer PRIVATE -fclang-abi-compat=17)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} ${JSONCPP_LIBRARIES} ${HIREDIS_LIBRARIES} mysql::concpp mysql::concpp-jdbc protobuf::libprotobuf gRPC::grpc++_reflection gRPC::grpc++)
